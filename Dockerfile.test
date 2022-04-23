@@ -1,0 +1,11 @@
+FROM alpine:3.7
+
+#add curl
+RUN apk add --no-cache bash curl
+
+# copy test files
+COPY tests /tmp/tests
+
+#test for http 200 status codes of GetCapabilities requests for both services
+ENTRYPOINT ["/bin/sh"]
+CMD ["-c", "/tmp/tests/test-wms.sh"]

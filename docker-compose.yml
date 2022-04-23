@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+  # xtf-import:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.xtfimport
+  #   environment:
+  #     ORG_GRADLE_PROJECT_dbUri: "jdbc:postgresql://db/oereb"
+  #     ORG_GRADLE_PROJECT_dbUserWrite: gretl
+  #     ORG_GRADLE_PROJECT_dbPwdWrite: gretl
+  #     ORG_GRADLE_PROJECT_dbUserRead: ogc_server
+  #     ORG_GRADLE_PROJECT_dbPwdRead: ogc_server
+  #     ORG_GRADLE_PROJECT_dbUriEditdb: $ORG_GRADLE_PROJECT_dbUriEditdb
+  #     ORG_GRADLE_PROJECT_dbUserEditdb: $ORG_GRADLE_PROJECT_dbUserEditdb
+  #     ORG_GRADLE_PROJECT_dbPwdEditdb: $ORG_GRADLE_PROJECT_dbPwdEditdb
+  #     ORG_GRADLE_PROJECT_dbUriPubdb: $ORG_GRADLE_PROJECT_dbUriPubdb
+  #     ORG_GRADLE_PROJECT_dbUserPubdb: $ORG_GRADLE_PROJECT_dbUserPubdb
+  #     ORG_GRADLE_PROJECT_dbPwdPubdb: $ORG_GRADLE_PROJECT_dbPwdPubdb
+  #   depends_on:
+  #     - db
+  qgis-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.qgisserver
+    environment:
+      QGIS_SERVER_PARALLEL_RENDERING: "true"
+      QGIS_SERVER_MAX_THREADS: 2
+      QGIS_FCGI_MAX_PROCESSES: 2
+      QGIS_FCGI_MIN_PROCESSES: 1
+      QGIS_SERVER_LOG_LEVEL: 0
+    ports:
+      - 8083:80
+    depends_on:
+      - db
+  db:
+    image: sogis/oereb-db:2
+    environment:
+      POSTGRES_DB: oereb
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_HOST_AUTH_METHOD: md5
+      PG_WRITE_PWD: ddluser
+      PG_READ_PWD: dmluser
+      PG_GRETL_PWD: gretl
+    ports:
+      - 54323:5432
