@@ -2,7 +2,7 @@ FROM sogis/qgis-server-base:3.16
 
 LABEL maintainer="Amt fuer Geoinformation Kanton Solothurn <agi@bd.so.ch>"
 
-# copy .qgs and .gpkg for dummy data
+# copy .qgs 
 COPY qgis /data
 
 RUN chown -R www-data:www-data /data
